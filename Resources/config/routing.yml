@@ -1,0 +1,3 @@
+lthrt_schema_visualizer_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: LthrtSchemaVisualizerBundle:Default:index }

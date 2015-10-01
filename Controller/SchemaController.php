@@ -20,6 +20,14 @@ class SchemaController extends Controller
         return $this->render('LthrtSchemaVisualizerBundle:Schema:single.html.twig', ['json' => $json]);
     }
 
+    public function graphAction(Request $request)
+    {
+        $rep  = $this->get('lthrt_schema_visualizer.representation_service');
+        $json = $rep->getGraphJSON();
+
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', ['json' => $json]);
+    }
+
     public function listAction(Request $request)
     {
         $classes = array_map(function ($m) {return str_replace('\\', '_', $m->getName());},

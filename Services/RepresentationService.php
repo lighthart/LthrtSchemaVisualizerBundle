@@ -3,6 +3,7 @@
 namespace Lthrt\SchemaVisualizerBundle\Services;
 
 use Lthrt\SchemaVisualizerBundle\Model\EntityRepresentation;
+use Lthrt\SchemaVisualizerBundle\Model\GraphRepresentation;
 use Lthrt\SchemaVisualizerBundle\Model\JSONRepresentation;
 
 class RepresentationService
@@ -38,4 +39,21 @@ class RepresentationService
 
         return $jsonRepresentation->getJSON();
     }
+
+    public function getGraphJSON()
+    {
+        $classes = array_map(function ($m) {return $m->getName();},
+            $this->em->getMetadataFactory()->getAllMetadata()
+        );
+
+        foreach ($classes as $key => $class) {
+            $metadata                = $this->em->getClassMetadata($class);
+            $entityRepresentations[] = new EntityRepresentation($metadata);
+        }
+
+        $graphRepresentation = new GraphRepresentation($entityRepresentations);
+
+        return $graphRepresentation->getJSON();
+    }
+
 }

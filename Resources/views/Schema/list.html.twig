@@ -3,6 +3,7 @@
 </ul>
 <ul>
 {% for class in classes %}
-    <li><a href="{{ path('single_schema', { 'class': class }) }}">{{class}}</a></li>
+    <li type="disc"><a href="{{ path('single_schema', { 'class': class }) }}">{{class}}</a>&nbsp;</li>
+    <li type="circle"><a href="{{ path('single_graph_schema', { 'class': class }) }}">graph {{class}}</a></li>
 {% endfor %}
 </ul>

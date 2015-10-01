@@ -2,9 +2,9 @@ all_schema:
     path:     /all
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:all" }
 
-graph_schema:
+all_graph_schema:
     path:     /graph
-    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:graph" }
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:allGraph" }
 
 list_schema:
     path:     /
@@ -14,3 +14,6 @@ single_schema:
     path:     /single/{class}
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:single" }
 
+single_graph_schema:
+    path:     /graph/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:singleGraph" }

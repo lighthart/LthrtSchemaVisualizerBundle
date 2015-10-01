@@ -15,15 +15,17 @@ class GraphRepresentation
 
     // mixed to handle arrays of entityRepresentations
 
-    public function __construct($entityRepresentations)
+    public function __construct($entityRepresentations, $router)
     {
         foreach ($entityRepresentations as $entityRepresentation) {
             foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
                 $getMethod = 'get'.ucfirst($type);
                 foreach ($entityRepresentation->$getMethod() as $key => $relation) {
                     $link['source'] = $entityRepresentation->getName();
-                    $link['target'] = $relation;
+                    $link['target'] = strrev(strstr(strrev($relation), '_', true));
                     $link['type'] = $type;
+                    $link['sourceClass'] = $router->generate('single_graph_schema', ['class' => $entityRepresentation->getClass()]);
+                    $link['targetClass'] = $router->generate('single_graph_schema', ['class' => $relation]);
                     $this->links[] = $link;
                 }
             }

@@ -1,4 +1,4 @@
 services:
    lthrt_schema_visualizer.representation_service:
        class: Lthrt\SchemaVisualizerBundle\Services\RepresentationService
-       arguments: [@doctrine.orm.entity_manager]
+       arguments: [@doctrine.orm.entity_manager, @router]

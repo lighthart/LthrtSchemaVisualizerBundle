@@ -9,13 +9,12 @@ class EntityRepresentation
     /**
      * @var string
      */
-    private $name;
+    private $class;
 
     /**
-     * Get name.
-     *
-     * @return
+     * @var string
      */
+    private $name;
 
     /**
      * @var string
@@ -47,36 +46,59 @@ class EntityRepresentation
      */
     private $manyToMany;
 
-    public function __construct(ClassMetadata $metadata)
+    public function __construct(ClassMetadata $metadata, $class = null)
     {
         $this->name   = strrev(strstr(strrev($metadata->name), '\\', true));
-        $this->parent = $metadata->parentClasses;
+        $this->class  = str_replace('\\', '_', $metadata->name);
+        $this->parent = array_map(function($c) { return strrev(strstr(strrev($c), '\\', true)); }, $metadata->parentClasses);
         $this->fields = array_keys(array_map(function ($f) {return $f['fieldName'];}, $metadata->fieldMappings));
-        $this->oneToOne =  array_map(
-            function ($f) { return strrev(strstr(strrev($f['targetEntity']), '\\', true));},
-            array_filter($metadata->associationMappings,
-                function ($a) { return ClassMetadata::ONE_TO_ONE == $a['type']; }
-            )
-        );
-        $this->oneToMany = array_map(
-            function ($f) { return strrev(strstr(strrev($f['targetEntity']), '\\', true));},
-            array_filter($metadata->associationMappings,
-                function ($a) { return ClassMetadata::ONE_TO_MANY == $a['type']; }
-            )
-        );
-        $this->manyToOne = array_map(
-            function ($f) { return strrev(strstr(strrev($f['targetEntity']), '\\', true));},
-            array_filter($metadata->associationMappings,
-                function ($a) { return ClassMetadata::MANY_TO_ONE == $a['type']; }
-            )
-        );
-        $this->manyToMany = array_map(
-            function ($f) { return strrev(strstr(strrev($f['targetEntity']), '\\', true));},
-            array_filter($metadata->associationMappings,
-                function ($a) { return ClassMetadata::MANY_TO_MANY == $a['type']; }
-            )
-        );
+
+        $constants['oneToOne']   = ClassMetadata::ONE_TO_ONE;
+        $constants['oneToMany']  = ClassMetadata::ONE_TO_MANY;
+        $constants['manyToOne']  = ClassMetadata::MANY_TO_ONE;
+        $constants['manyToMany'] = ClassMetadata::MANY_TO_MANY;
+
+        foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
+            $this->$type =  array_map(
+                function ($f) { return str_replace('\\', '_', $f['targetEntity']);},
+                array_filter($metadata->associationMappings,
+                    function ($a) use ($class, $constants, $type) {
+                        return $class
+                        ? $constants[$type] == $a['type'] && ($class == $a['targetEntity'] || $class == $a['sourceEntity'])
+                        : $constants[$type] == $a['type'];
+                    }
+                )
+            );
+        }
     }
+
+    /**
+     * Get class
+     *
+     * @return
+     */
+
+    public function getClass() {
+         return $this->class;
+    }
+
+    /**
+     * Set class
+     *
+     * @param
+     * @return $this
+     */
+    public function setClass($class) {
+        $this->class = $class;
+        return $this;
+    }
+
+
+    /**
+     * Get name.
+     *
+     * @return
+     */
 
     public function getName()
     {

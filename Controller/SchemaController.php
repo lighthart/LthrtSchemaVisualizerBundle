@@ -14,16 +14,14 @@ class SchemaController extends Controller
 {
     public function allAction(Request $request)
     {
-        $rep  = $this->get('lthrt_schema_visualizer.representation_service');
-        $json = $rep->getAllJSON();
+        $json = $this->get('lthrt_schema_visualizer.representation_service')->getAllJSON();
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:single.html.twig', ['json' => $json]);
     }
 
-    public function graphAction(Request $request)
+    public function allGraphAction(Request $request)
     {
-        $rep  = $this->get('lthrt_schema_visualizer.representation_service');
-        $json = $rep->getGraphJSON();
+        $json = $this->get('lthrt_schema_visualizer.representation_service')->getAllGraphJSON();
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', ['json' => $json]);
     }
@@ -39,9 +37,15 @@ class SchemaController extends Controller
 
     public function singleAction(Request $request, $class)
     {
-        $rep  = $this->get('lthrt_schema_visualizer.representation_service');
-        $json = $rep->getJSON($class);
+        $json  = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:single.html.twig', ['json' => $json]);
+    }
+
+    public function singleGraphAction(Request $request, $class)
+    {
+        $json  = $this->get('lthrt_schema_visualizer.representation_service')->getGraphJSON($class);
+
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', ['json' => $json, 'class' => $class]);
     }
 }

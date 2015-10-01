@@ -1,0 +1,8 @@
+<ul>
+    <li><a href="{{ path('all_schema') }}">All</a></li>
+</ul>
+<ul>
+{% for class in classes %}
+    <li><a href="{{ path('single_schema', { 'class': class }) }}">{{class}}</a></li>
+{% endfor %}
+</ul>

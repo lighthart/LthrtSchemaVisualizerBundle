@@ -1,0 +1,11 @@
+list_schema:
+    path:     /
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:list" }
+
+single_schema:
+    path:     /single/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:single" }
+
+all_schema:
+    path:     /all
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:all" }

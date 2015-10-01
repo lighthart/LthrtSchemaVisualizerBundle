@@ -18,9 +18,9 @@ class GraphRepresentation
     public function __construct($entityRepresentations)
     {
         foreach ($entityRepresentations as $entityRepresentation) {
-            foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $relation) {
-                $getMethod = 'get'.ucfirst($relation);
-                foreach ($entityRepresentation->$getMethod() as $key => $type) {
+            foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
+                $getMethod = 'get'.ucfirst($type);
+                foreach ($entityRepresentation->$getMethod() as $key => $relation) {
                     $link['source'] = $entityRepresentation->getName();
                     $link['target'] = $relation;
                     $link['type'] = $type;

@@ -86,7 +86,7 @@ var width = $('div.svg').width(),
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([width, height/2])
+    .size([width, height])
     .linkDistance(width/15)
     .charge(-4000)
     .chargeDistance(400)

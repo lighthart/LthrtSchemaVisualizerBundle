@@ -42,7 +42,7 @@ class RepresentationService
             $entityRepresentations[] = new EntityRepresentation($metadata);
         }
 
-        $graphRepresentation = new GraphRepresentation($entityRepresentations);
+        $graphRepresentation = new GraphRepresentation($entityRepresentations, $this->router);
 
         return $graphRepresentation->getJSON();
     }

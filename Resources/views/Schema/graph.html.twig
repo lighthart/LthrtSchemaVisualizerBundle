@@ -57,25 +57,27 @@ div.svg {
 <body>
 <ul>
 <li><a href="{{ path('all_schema') }}">All</a></li>
+<li><a href="{{ path('all_graph_schema') }}">Graph</a></li>
 <li><a href="{{ path('list_schema') }}">Back To List</a></li>
 </ul>
 <div class="json">
+{% if class is defined %}
 {{class}}
+{% endif %}
 {{json|json|raw}}
 </div>
 <div class="svg">
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script>
-// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
 var links = {{json|raw}};
 
 var nodes = {};
 
 // Compute the distinct nodes from the links.
 links.forEach(function(link) {
-  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, path: link.sourceClass });
-  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target, path: link.targetClass });
+  link.source = nodes[link.source] || (nodes[link.source] = { name: link.source, path: link.sourceClass });
+  link.target = nodes[link.target] || (nodes[link.target] = { name: link.target, path: link.targetClass });
 });
 
 var width = $('div.svg').width(),
@@ -84,9 +86,11 @@ var width = $('div.svg').width(),
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([width, height])
-    .linkDistance(width/6)
-    .charge(-width/3)
+    .size([width, height/2])
+    .linkDistance(width/15)
+    .charge(-4000)
+    .chargeDistance(400)
+    .friction(0.6)
     .on("tick", tick)
     .start();
 
@@ -151,6 +155,14 @@ function linkArc(d, n) {
 
 function transform(d) {
   return "translate(" + d.x + "," + d.y + ")";
+}
+
+var drag = force.drag()
+    .on("dragstart", dragstart);
+
+function dragstart(d) {
+  d.fixed = true;
+  d3.select(this).classed("fixed", true);
 }
 
 </script>

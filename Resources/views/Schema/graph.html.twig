@@ -66,104 +66,118 @@ div.svg {
 {% endif %}
 {{json|json|raw}}
 </div>
-<div class="svg">
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<div class="svg" id="paper">
+  {# Get rid of this hard coded stuff #}
+<link rel="stylesheet" type="text/css" href="/eval/bundles/lthrtschemavisualizer/css/joint.min.css" />
+<script src="/eval/bundles/lthrtschemavisualizer/js/jquery.min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/lodash.min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/backbone-min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/joint.min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/joint.layout.DirectedGraph.min.js"></script>
 <script>
-var links = {{json|raw}};
 
-var nodes = {};
+var json = {{json|raw}};
 
-// Compute the distinct nodes from the links.
-links.forEach(function(link) {
-  link.source = nodes[link.source] || (nodes[link.source] = { name: link.source, path: link.sourceClass });
-  link.target = nodes[link.target] || (nodes[link.target] = { name: link.target, path: link.targetClass });
+
+var adjacencyList=[];
+
+json.forEach(function(e) {
+  if (adjacencyList[e.source]) {
+    adjacencyList[e.source].push(e.target);
+  } else {
+    adjacencyList[e.source] = [e.target];
+  }
+});
+function buildGraphFromAdjacencyList(adjacencyList) {
+
+    var elements = [];
+    var links = [];
+
+    _.each(adjacencyList, function(edges, parentElementLabel) {
+        elements.push(makeElement(parentElementLabel));
+
+        _.each(edges, function(childElementLabel) {
+            links.push(makeLink(parentElementLabel, childElementLabel));
+        });
+    });
+
+    // Links must be added after all the elements. This is because when the links
+    // are added to the graph, link source/target
+    // elements must be in the graph already.
+    return elements.concat(links);
+}
+
+function makeLink(parentElementLabel, childElementLabel) {
+  console.log('making link');
+
+    return new joint.dia.Link({
+        source: { id: parentElementLabel },
+        target: { id: childElementLabel },
+        attrs: { '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' } },
+        smooth: true
+    });
+}
+
+function makeElement(label) {
+
+    var maxLineLength = _.max(label.split('\n'), function(l) { return l.length; }).length;
+
+    // Compute width/height of the rectangle based on the number
+    // of lines in the label and the letter size. 0.6 * letterSize is
+    // an approximation of the monospace font letter width.
+    var letterSize = 8;
+    var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+    var height = 2 * ((label.split('\n').length + 1) * letterSize);
+
+    return new joint.shapes.basic.Rect({
+        id: label,
+        size: { width: width, height: height },
+        attrs: {
+            text: { text: label, 'font-size': letterSize, 'font-family': 'monospace' },
+            rect: {
+                width: width, height: height,
+                rx: 5, ry: 5,
+                stroke: '#555'
+            }
+        }
+    });
+}
+
+// Main.
+// -----
+
+var graph = new joint.dia.Graph;
+
+var paper = new joint.dia.Paper({
+
+    el: $('#paper'),
+    width: 2000,
+    height: 2000,
+    gridSize: 1,
+    model: graph
 });
 
-var width = $('div.svg').width(),
-    height = $(window).height();
+// Just give the viewport a little padding.
+V(paper.viewport).translate(20, 20);
 
-var force = d3.layout.force()
-    .nodes(d3.values(nodes))
-    .links(links)
-    .size([width, height])
-    .linkDistance(width/15)
-    .charge(-4000)
-    .chargeDistance(400)
-    .friction(0.6)
-    .on("tick", tick)
-    .start();
+$('#btn-layout').on('click', layout);
 
-var svg = d3.select("div.svg").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+function layout() {
 
-// Per-type markers, as they don't inherit styles.
-svg.append("defs").selectAll("marker")
-    .data(["onToOne", "oneToMany", "manyToOne", "manyToMany"])
-  .enter().append("marker")
-    .attr("id", function(d) { return d; })
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 15)
-    .attr("refY", -1.5)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-  .append("path")
-    .attr("d", "M0,-5L10,0L0,5");
+    try {
+        var adjacencyList = eval('adjacencyList = ' + $('#adjacency-list').val());
+    } catch (e) { alert(e); }
 
-var path = svg.append("g").selectAll("path")
-    .data(force.links())
-  .enter().append("path")
-    .attr("class", function(d) { return "link " + d.type; })
-    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
-
-var rect = svg.append("g").selectAll("rect")
-    .data(force.nodes())
-  .enter().append("a")
-    .attr("xlink:href", function(d){return d.path;})
-    // .on("click", click)
-  .append("rect")
-    .attr("width", function(d) { return 0.6*d.name.length+"em"; })
-    .attr("height", "2em")
-    .call(force.drag);
-
-var text = svg.append("g").selectAll("text")
-    .data(force.nodes())
-  .enter().append("text")
-    .attr("x", "0.1em")
-    .attr("y", "1em")
-    .text(function(d) { return d.name; })
-
-
-// Use elliptical arc path segments to doubly-encode directionality.
-function tick() {
-  path.attr("d", linkArc);
-  rect.attr("transform", transform);
-  text.attr("transform", transform);
+    var cells = buildGraphFromAdjacencyList(adjacencyList);
+    graph.resetCells(cells);
+    joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
 }
 
-function linkArc(d, n) {
-  var dx = d.target.x - d.source.x,
-      dy = d.target.y - d.source.y,
-      dr = Math.sqrt(dx * dx + dy * dy);
-      // curvy commented out
-      // arc = "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y
-      arc = "m" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
-  return arc;
-}
-
-function transform(d) {
-  return "translate(" + d.x + "," + d.y + ")";
-}
-
-var drag = force.drag()
-    .on("dragstart", dragstart);
-
-function dragstart(d) {
-  d.fixed = true;
-  d3.select(this).classed("fixed", true);
-}
+$(window).ready(function(){
+  console.log('ready');
+  layout();
+});
+layout();
 
 </script>
 </div>

@@ -82,18 +82,24 @@ var json = {{json|raw}};
 var adjacencyList=[];
 
 json.forEach(function(e) {
-  if (adjacencyList[e.source]) {
-    adjacencyList[e.source].push(e.target);
+  source = e.source;
+  if (adjacencyList.source) {
+    adjacencyList.source.push(e.target);
   } else {
-    adjacencyList[e.source] = [e.target];
+    adjacencyList.source = [e.target];
   }
 });
+console.log(json);
+console.log(adjacencyList);
+
 function buildGraphFromAdjacencyList(adjacencyList) {
 
     var elements = [];
     var links = [];
-
+console.log('buildGraphFromAdjacencyList');
     _.each(adjacencyList, function(edges, parentElementLabel) {
+      console.log('parentElementLabel');
+      console.log(parentElementLabel);
         elements.push(makeElement(parentElementLabel));
 
         _.each(edges, function(childElementLabel) {

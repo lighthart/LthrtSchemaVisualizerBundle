@@ -170,9 +170,9 @@ $('#btn-layout').on('click', layout);
 
 function layout() {
 
-    try {
-        var adjacencyList = eval('adjacencyList = ' + $('#adjacency-list').val());
-    } catch (e) { alert(e); }
+    // try {
+    //     var adjacencyList = eval('adjacencyList = ' + $('#adjacency-list').val());
+    // } catch (e) { alert(e); }
 
     var cells = buildGraphFromAdjacencyList(adjacencyList);
     graph.resetCells(cells);
@@ -183,7 +183,6 @@ $(window).ready(function(){
   console.log('ready');
   layout();
 });
-layout();
 
 </script>
 </div>

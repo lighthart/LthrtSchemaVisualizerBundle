@@ -48,7 +48,7 @@ function buildGraphFromAdjacencyList(adjacencyList, depth) {
 
   joint.shapes.custom.ElementLink = joint.shapes.basic.Rect.extend({
     // Note the `<a>` SVG element surrounding the rest of the markup.
-    markup: '<a><g class="rotatable"><g class="scalable"><rect/></g><a><text/></g></a>',
+    markup: '<a><g class="rotatable"><g class="scalable"><rect/></g><text/></g></a>',
     defaults: joint.util.deepSupplement({
       type: 'custom.ElementLink'
     }, joint.shapes.basic.Rect.prototype.defaults)
@@ -61,6 +61,7 @@ function buildGraphFromAdjacencyList(adjacencyList, depth) {
           type: 'custom.ElementLabelLink'
       }, joint.shapes.basic.Rect.prototype.defaults)
   });
+
 
   function makeElement(label, depth) {
     labelName = className(label);
@@ -93,21 +94,19 @@ function buildGraphFromAdjacencyList(adjacencyList, depth) {
 // Main.
 // -----
 
+var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
 var graph = new joint.dia.Graph;
 
 var paper = new joint.dia.Paper({
 
   el: $('#paper'),
-  width: 2000,
-  height: 2000,
+  width: w,
+  height: h,
   gridSize: 1,
   model: graph
 });
-
-// Just give the viewport a little padding.
-V(paper.viewport).translate(20, 20);
-
-$('#btn-layout').on('click', layout);
 
 function layout() {
 
@@ -117,7 +116,13 @@ function layout() {
 
     var cells = buildGraphFromAdjacencyList(adjacencyList, depth);
     graph.resetCells(cells);
-    joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
+    joint.layout.DirectedGraph.layout(graph, {
+      // setLinkVertices: false,
+      rankDir: "TB",
+      rankSep: 10,
+      nodeSep: 10,
+      edgeSep: 10
+    });
   }
 
   $(window).ready(function(){

@@ -59,6 +59,31 @@ class EntityRepresentation
         $constants['manyToMany'] = ClassMetadata::MANY_TO_MANY;
 
         foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
+            if ('manyToMany' == $type) {
+                if ('Person' == $this->name) {
+
+                var_dump('ER');
+                // var_dump($metadata->associationMappings);
+                var_dump(array_filter($metadata->associationMappings,
+                    function ($a) use ($class, $constants, $type, $metadata) {
+                        var_dump('@@@@@@@@@@@@@@@@@@@@@@@@@@');
+var_dump('$$$$$$$$$$');
+                        var_dump($metadata->name);
+                        var_dump($a['targetEntity']);
+                        var_dump($metadata->name == $a['targetEntity']);
+var_dump('$#########');
+                        var_dump($metadata->name);
+                        var_dump($a['sourceEntity']);
+                        var_dump($metadata->name == $a['sourceEntity']);
+                        var_dump($metadata->name == $a['targetEntity'] || $metadata->name == $a['sourceEntity']);
+                        var_dump($class);
+                        return $class
+                        ? $constants[$type] == $a['type'] && ($metadata->name == $a['targetEntity'] || $metadata->name == $a['sourceEntity'])
+                        : $constants[$type] == $a['type'];
+                    }
+                ));
+                }
+            }
             $this->$type =  array_map(
                 function ($f) { return str_replace('\\', '_', $f['targetEntity']);},
                 array_filter($metadata->associationMappings,

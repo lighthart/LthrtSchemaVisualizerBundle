@@ -1,19 +1,11 @@
-all_schema:
-    path:     /all
-    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:all" }
+json_schema:
+    path:     /json/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:json", class : 0, depth: 0 }
 
-all_graph_schema:
-    path:     /graph
-    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:allGraph" }
+graph_schema:
+    path:     /graph/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:graph", class : 0, depth: 0 }
 
 list_schema:
     path:     /
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:list" }
-
-single_schema:
-    path:     /single/{class}
-    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:single" }
-
-single_graph_schema:
-    path:     /graph/{class}
-    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:singleGraph" }

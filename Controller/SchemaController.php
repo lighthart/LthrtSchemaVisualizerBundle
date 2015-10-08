@@ -12,19 +12,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SchemaController extends Controller
 {
-    public function allAction(Request $request)
+    public function jsonAction(Request $request, $depth, $class = null)
     {
-        $json = $this->get('lthrt_schema_visualizer.representation_service')->getAllJSON();
-
-        return $this->render('LthrtSchemaVisualizerBundle:Schema:single.html.twig', ['json' => $json]);
+        $json = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
+        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:json.html.twig', [
+            'json'          => $json,
+            'class'         => $class,
+            'adjacencyList' => $adjacencyList,
+            'depth'         => $depth,
+        ]);
     }
 
-    public function allGraphAction(Request $request)
+    public function graphAction(Request $request, $level = 0, $class = null)
     {
-        $json = $this->get('lthrt_schema_visualizer.representation_service')->getAllGraphJSON();
+        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class , $level);
 
-        return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', ['json' => $json]);
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', [
+            'adjacencyList' => $adjacencyList,
+            'class'         => $class,
+            'depth'         => $depth,
+        ]);
     }
+
 
     public function listAction(Request $request)
     {
@@ -33,19 +43,5 @@ class SchemaController extends Controller
         );
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:list.html.twig', ['classes' => $classes]);
-    }
-
-    public function singleAction(Request $request, $class)
-    {
-        $json  = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
-
-        return $this->render('LthrtSchemaVisualizerBundle:Schema:single.html.twig', ['json' => $json]);
-    }
-
-    public function singleGraphAction(Request $request, $class)
-    {
-        $json  = $this->get('lthrt_schema_visualizer.representation_service')->getGraphJSON($class);
-
-        return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', ['json' => $json, 'class' => $class]);
     }
 }

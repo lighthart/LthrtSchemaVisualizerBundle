@@ -48,10 +48,18 @@ function buildGraphFromAdjacencyList(adjacencyList, depth) {
 
   joint.shapes.custom.ElementLink = joint.shapes.basic.Rect.extend({
     // Note the `<a>` SVG element surrounding the rest of the markup.
-    markup: '<a><g class="rotatable"><g class="scalable"><rect/></g><text/></g></a>',
+    markup: '<a><g class="rotatable"><g class="scalable"><rect/></g><a><text/></g></a>',
     defaults: joint.util.deepSupplement({
       type: 'custom.ElementLink'
     }, joint.shapes.basic.Rect.prototype.defaults)
+  });
+
+  joint.shapes.custom.ElementLabelLink = joint.shapes.basic.Rect.extend({
+      // Note the `<a>` SVG element surrounding the rest of the markup.
+      markup: '<g class="rotatable"><g class="scalable"><rect/></g><a><text/></a></g>',
+      defaults: joint.util.deepSupplement({
+          type: 'custom.ElementLabelLink'
+      }, joint.shapes.basic.Rect.prototype.defaults)
   });
 
   function makeElement(label, depth) {
@@ -67,7 +75,7 @@ function buildGraphFromAdjacencyList(adjacencyList, depth) {
     var height = 2 * ((labelName.split('\n').length + 1) * letterSize);
 
 
-    return new joint.shapes.custom.ElementLink({
+    return new joint.shapes.custom.ElementLabelLink({
       id: label,
       size: { width: width, height: height },
       attrs: {

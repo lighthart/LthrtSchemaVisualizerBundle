@@ -1,0 +1,17 @@
+{% include 'LthrtSchemaVisualizerBundle:Schema:graphcss.html.twig' %}
+<table>
+  <tr>
+    <td class="json">
+        {% include 'LthrtSchemaVisualizerBundle:Schema:links.html.twig' %}
+        <div class="json">
+            {% if class is defined and class %}
+              {{class}}
+          {% endif %}
+          {{json|json|raw}}
+      </div>
+  </td>
+  <td class="svg" id="paper">
+    </td>
+</tr>
+</table>
+{% include 'LthrtSchemaVisualizerBundle:Schema:graphjs.html.twig' with {'depth' : depth } %}

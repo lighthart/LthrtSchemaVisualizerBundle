@@ -3,6 +3,7 @@
 namespace Lthrt\SchemaVisualizerBundle\Services;
 
 use Lthrt\SchemaVisualizerBundle\Model\AdjacencyListRepresentation;
+use Lthrt\SchemaVisualizerBundle\Model\AssociationGetter;
 use Lthrt\SchemaVisualizerBundle\Model\EntityRepresentation;
 use Lthrt\SchemaVisualizerBundle\Model\GraphRepresentation;
 use Lthrt\SchemaVisualizerBundle\Model\JSONRepresentation;
@@ -22,36 +23,20 @@ class RepresentationService
         $allMetadata = $this->em->getMetadataFactory()->getAllMetadata();
         $class = str_replace('_', '\\', $class);
         if ($class) {
-            $metadata = $this->em->getClassMetadata($class);
-            $classes[] = $metadata->name;
+            $getter = new AssociationGetter($this->em);
+            $classes = $getter->getAssociations($class);
+            $classes[] = $this->em->getClassMetadata($class)->name;
             $counter = 1;
-            while ($counter <= intval($level)) {
-                var_dump($counter);
+            while ($counter < intval($level)) {
                 foreach ($classes as $iterClass) {
-                    $metadata = $this->em->getClassMetadata($iterClass);
-                    array_map(
-                        function() {},
-                        array_map(
-                            function($md) use (&$classes) { $classes[]=$md['targetEntity'];},
-                            $metadata->associationMappings
-                        )
-                    );
-                    foreach($allMetadata as $md) {
-                        // var_dump($md->name);
-                            if (in_array($iterClass, array_map(function($m) {return $m['targetEntity'];}, $md->associationMappings))) {
-                                $classes[] = $md->name;
-                        }
+                    $associations = $getter->getAssociations($iterClass);
+                    foreach ($associations as $association) {
+                        $classes[]=$association;
                     }
+                    $classes = array_unique($classes);
                 }
-
-
-                var_dump($classes);
                 $counter++;
             }
-
-            $classes = array_unique($classes);
-            var_dump('final total');
-            var_dump($classes);
         } else {
             $classes = array_map(function ($m) {return $m->getName();},
                 $this->em->getMetadataFactory()->getAllMetadata()
@@ -60,7 +45,6 @@ class RepresentationService
 
 
         foreach ($classes as $key => $newClass) {
-            var_dump($newClass);
             $metadata                = $this->em->getClassMetadata($newClass);
             $entityRepresentations[] = new EntityRepresentation($metadata, $class);
         }

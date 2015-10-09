@@ -117,8 +117,8 @@ function layout() {
     var cells = buildGraphFromAdjacencyList(adjacencyList, depth);
     graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(graph, {
-      // setLinkVertices: false,
-      rankDir: "TB",
+      setLinkVertices: false,
+      rankDir: "LR",
       rankSep: 10,
       nodeSep: 10,
       edgeSep: 10

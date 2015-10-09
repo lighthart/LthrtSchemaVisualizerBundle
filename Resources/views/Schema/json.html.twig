@@ -1,4 +1,7 @@
 {% include 'LthrtSchemaVisualizerBundle:Schema:graphcss.html.twig' %}
+{% for table in json|json_decode %}
+{{ table.class}}
+{% endfor %}
 <table>
   <tr>
     <td class="json">

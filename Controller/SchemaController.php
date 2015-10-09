@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SchemaController extends Controller
 {
-    public function jsonAction(Request $request, $depth, $class = null)
+    public function jsonAction(Request $request, $depth = 0, $class = null)
     {
         $json = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
         $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
@@ -24,12 +24,23 @@ class SchemaController extends Controller
         ]);
     }
 
-    public function graphAction(Request $request, $level = 0, $class = null)
+    public function graphAction(Request $request, $depth = 0, $class = null)
     {
-        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class , $level);
+        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class , $depth);
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', [
             'adjacencyList' => $adjacencyList,
+            'class'         => $class,
+            'depth'         => $depth,
+        ]);
+    }
+
+    public function graphmlAction(Request $request, $depth = 0, $class = null)
+    {
+        $json = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
+
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:graphml.html.twig', [
+            'json'          => $json,
             'class'         => $class,
             'depth'         => $depth,
         ]);

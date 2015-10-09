@@ -1,0 +1,102 @@
+graph
+[
+    hierarchic  1
+    label   ""
+    directed    1
+    {% for node in json|json_decode %}
+                {% set fields = [] %}
+        {%- for field in node.fields %}
+            {% if field not in ['id', 'created', 'updated', 'log'] %}
+                {% set fields = fields|merge([field])%}
+            {% endif %}
+        {% endfor -%}
+        node
+        [
+            id  "{{node.class}}"
+            label  "{{node.name}}"
+            graphics [
+                h {{ 20 + 18 * fields|length }}
+                w {{ 12 * (node.name|length < 12 ? 12 : node.name|length) }}
+                customconfiguration "com.yworks.entityRelationship.big_entity"
+                outline "#000000"
+            ]
+            LabelGraphics
+            [
+                text    "{{node.name}}"
+                fill    "#B7C9E3"
+                fontSize    12
+                fontName    "Dialog"
+                configuration   "com.yworks.entityRelationship.label.name"
+                anchor  "t"
+                borderDistance  1
+            ]
+            LabelGraphics
+            [
+                text    "
+{%- for field in fields %}{{field}}
+{% endfor -%}
+                "
+                fontSize    12
+                fontName    "Dialog"
+                alignment   "left"
+                anchor  "bl"
+                configuration   "com.yworks.entityRelationship.label.attributes"
+                borderDistance  1
+            ]
+        ]
+    {% endfor %}
+        {% for node in json|json_decode %}
+            {% for edge, target in node.oneToOne %}
+                edge
+                [
+                    source "{{node.class}}"
+                    target "{{target}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_one"
+                        targetArrow "crows_foot_one"
+                    ]
+                ]
+            {% endfor %}
+            {% for edge, target in node.oneToMany %}
+                edge
+                [
+                    source "{{node.class}}"
+                    target "{{target}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_one"
+                        targetArrow "crows_foot_many"
+                    ]
+                ]
+            {% endfor %}
+            {% for edge, target in node.manyToOne %}
+                edge
+                [
+                    source "{{node.class}}"
+                    target "{{target}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_many"
+                        targetArrow "crows_foot_one"
+                    ]
+                ]
+            {% endfor %}
+            {% for edge, target in node.manyToMany %}
+                edge
+                [
+                    source "{{node.class}}"
+                    target "{{target}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_many"
+                        targetArrow "crows_foot_many"
+                    ]
+                ]
+            {% endfor %}
+        {% endfor %}
+]

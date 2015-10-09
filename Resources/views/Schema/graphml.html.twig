@@ -1,9 +1,10 @@
+{% set json = json|json_decode %}
 graph
 [
     hierarchic  1
     label   ""
     directed    1
-    {% for node in json|json_decode %}
+    {% for node in json.nodes %}
                 {% set fields = [] %}
         {%- for field in node.fields %}
             {% if field not in ['id', 'created', 'updated', 'log'] %}
@@ -33,7 +34,7 @@ graph
             LabelGraphics
             [
                 text    "
-{%- for field in fields %}{{field}}
+{%- for field in fields %}{{field}}<br/>
 {% endfor -%}
                 "
                 fontSize    12
@@ -45,51 +46,12 @@ graph
             ]
         ]
     {% endfor %}
-        {% for node in json|json_decode %}
-            {% for edge, target in node.oneToOne %}
+        {% for key, edge in json.edges %}
+            {% if edge.many|length > 1 %}
                 edge
                 [
-                    source "{{node.class}}"
-                    target "{{target}}"
-                    graphics
-                    [
-                        fill    "#000000"
-                        sourceArrow "crows_foot_one"
-                        targetArrow "crows_foot_one"
-                    ]
-                ]
-            {% endfor %}
-            {% for edge, target in node.oneToMany %}
-                edge
-                [
-                    source "{{node.class}}"
-                    target "{{target}}"
-                    graphics
-                    [
-                        fill    "#000000"
-                        sourceArrow "crows_foot_one"
-                        targetArrow "crows_foot_many"
-                    ]
-                ]
-            {% endfor %}
-            {% for edge, target in node.manyToOne %}
-                edge
-                [
-                    source "{{node.class}}"
-                    target "{{target}}"
-                    graphics
-                    [
-                        fill    "#000000"
-                        sourceArrow "crows_foot_many"
-                        targetArrow "crows_foot_one"
-                    ]
-                ]
-            {% endfor %}
-            {% for edge, target in node.manyToMany %}
-                edge
-                [
-                    source "{{node.class}}"
-                    target "{{target}}"
+                    source "{{edge.many[0]}}"
+                    target "{{edge.many[1]}}"
                     graphics
                     [
                         fill    "#000000"
@@ -97,6 +59,31 @@ graph
                         targetArrow "crows_foot_many"
                     ]
                 ]
-            {% endfor %}
+            {% elseif edge.one|length > 1 %}
+                edge
+                [
+                    source "{{edge.one[0]}}"
+                    target "{{edge.one[1]}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_one"
+                        targetArrow "crows_foot_one"
+                    ]
+                ]
+            {% else %}
+                edge
+                [
+                    source "{{edge.one[0]}}"
+                    target "{{edge.many[0]}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_one"
+                        targetArrow "crows_foot_many"
+                    ]
+                ]
+            {% endif %}
         {% endfor %}
 ]
+

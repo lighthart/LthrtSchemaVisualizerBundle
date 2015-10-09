@@ -5,7 +5,10 @@ namespace Lthrt\SchemaVisualizerBundle\Services;
 use Lthrt\SchemaVisualizerBundle\Model\AdjacencyListRepresentation;
 use Lthrt\SchemaVisualizerBundle\Model\AssociationGetter;
 use Lthrt\SchemaVisualizerBundle\Model\EntityRepresentation;
+use Lthrt\SchemaVisualizerBundle\Model\EdgesRepresentation;
 use Lthrt\SchemaVisualizerBundle\Model\GraphRepresentation;
+use Lthrt\SchemaVisualizerBundle\Model\NodesRepresentation;
+use Lthrt\SchemaVisualizerBundle\Model\NodesAndEdgesRepresentation;
 use Lthrt\SchemaVisualizerBundle\Model\JSONRepresentation;
 
 class RepresentationService
@@ -109,11 +112,30 @@ class RepresentationService
         return $jsonRepresentation->getJSON();
 
 
-        $class                = str_replace('_', '\\', $class);
-        $metadata             = $this->em->getClassMetadata($class);
-        $entityRepresentation = new EntityRepresentation($metadata);
-        $jsonRepresentation   = new JSONRepresentation($entityRepresentation);
+        // $class                = str_replace('_', '\\', $class);
+        // $metadata             = $this->em->getClassMetadata($class);
+        // $entityRepresentation = new EntityRepresentation($metadata);
+        // $jsonRepresentation   = new JSONRepresentation($entityRepresentation);
 
-        return $jsonRepresentation->getJSON($level);
+        // return $jsonRepresentation->getJSON($level);
+    }
+
+    public function getNodesAndEdges($class = null)
+    {
+        if ($class) {
+            $classes = [$class = str_replace('_', '\\', $class)];
+        } else {
+            $classes = array_map(function ($m) {return $m->getName();},
+                $this->em->getMetadataFactory()->getAllMetadata()
+            );
+        }
+
+        foreach ($classes as $key => $class) {
+            $metadata                = $this->em->getClassMetadata($class);
+            $entityRepresentations[] = new EntityRepresentation($metadata);
+        }
+        $representation = new NodesAndEdgesRepresentation($entityRepresentations);
+
+        return $representation->getJSON();
     }
 }

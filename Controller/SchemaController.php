@@ -37,8 +37,7 @@ class SchemaController extends Controller
 
     public function graphmlAction(Request $request, $depth = 0, $class = null)
     {
-        $json = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
-
+        $json = $this->get('lthrt_schema_visualizer.representation_service')->getNodesAndEdges($class);
         return $this->render('LthrtSchemaVisualizerBundle:Schema:graphml.html.twig', [
             'json'          => $json,
             'class'         => $class,

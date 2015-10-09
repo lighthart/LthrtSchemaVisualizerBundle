@@ -6,13 +6,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-class NodeRepresentation
+class EdgesRepresentation
 {
-    /**
-     * @var EntityRepresentation
-     */
-    private $entityRepresentation;
-
     private $links;
 
     // mixed to handle arrays of entityRepresentations
@@ -23,18 +18,27 @@ class NodeRepresentation
             foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $relation) {
                 $getMethod = 'get'.ucfirst($relation);
                 foreach ($entityRepresentation->$getMethod() as $key => $type) {
-                    $link['source'] = $entityRepresentation->getName();
-                    $link['target'] = $relation;
-                    $link['type'] = $type;
-                    $this->links[] = $link;
+                    $link=[];
+                    $link[stristr($relation, 'To', true)][] = $entityRepresentation->getClass();
+                    $link[strtolower(substr(stristr($relation, 'To', false),2))][] = $type;
+                    foreach (['one', 'many'] as $kind) {
+                        if (isset($link[$kind])) { sort($link[$kind]);}
+                    }
+                    $links[] = $link;
                 }
+            }
+        }
+        $this->links = [];
+
+        foreach($links as $link) {
+            if (!in_array($link, $this->links)) {
+                $this->links[] = $link;
             }
         }
     }
 
     public function getJSON()
     {
-        $rep        = $this->entityRepresentation;
         $normalizer = new ObjectNormalizer();
         $normalizer->setIgnoredAttributes(['id']);
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);

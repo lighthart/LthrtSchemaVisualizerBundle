@@ -16,6 +16,7 @@ graph
             id  "{{node.class}}"
             label  "{{node.name}}"
             graphics [
+                h {{ 20 }}
                 h {{ 20 + 18 * fields|length }}
                 w {{ 12 * (node.name|length < 12 ? 12 : node.name|length) }}
                 customconfiguration "com.yworks.entityRelationship.big_entity"
@@ -31,7 +32,7 @@ graph
                 anchor  "t"
                 borderDistance  1
             ]
-            LabelGraphics
+            {# LabelGraphics
             [
                 text    "
 {%- for field in fields %}{{field}}<br/>
@@ -43,7 +44,7 @@ graph
                 anchor  "bl"
                 configuration   "com.yworks.entityRelationship.label.attributes"
                 borderDistance  1
-            ]
+            ] #}
         ]
     {% endfor %}
         {% for key, edge in json.edges %}

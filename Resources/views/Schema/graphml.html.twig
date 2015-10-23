@@ -48,7 +48,7 @@ graph
         ]
     {% endfor %}
         {% for key, edge in json.edges %}
-            {% if edge.many|length > 1 %}
+            {% if edge.many is defined and edge.many|length > 1 %}
                 edge
                 [
                     source "{{edge.many[0]}}"
@@ -60,7 +60,7 @@ graph
                         targetArrow "crows_foot_many"
                     ]
                 ]
-            {% elseif edge.one|length > 1 %}
+            {% elseif edge.one is defined and edge.one|length > 1 %}
                 edge
                 [
                     source "{{edge.one[0]}}"

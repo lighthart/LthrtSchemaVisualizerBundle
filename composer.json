@@ -27,8 +27,7 @@
         "lthrt/json-view-bundle": "dev-master"
     },
     "require-dev": {
-        "symfony/framework-bundle": "~2.7",
-        "lthrt/json-view-bundle": "dev-master"
+        "symfony/framework-bundle": "~2.7"
     },
     "autoload": {
         "psr-0": {

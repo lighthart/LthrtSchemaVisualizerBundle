@@ -10,7 +10,7 @@
             {% if class is defined and class %}
               {{class}}
           {% endif %}
-          {{json|json|raw}}
+          {{json|json_pretty|raw}}
       </div>
   </td>
   <td class="svg" id="paper">

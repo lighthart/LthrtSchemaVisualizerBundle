@@ -10,7 +10,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/lthrt/JSONViewBundle.git"
+            "url": "https://github.com/lthrt/EntityViewBundle.git"
         }
     ],
     "homepage": "https://github.com/lthrt/SchemaVisualizerBundle",
@@ -24,7 +24,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "lthrt/json-view-bundle": "dev-master"
+        "lthrt/entity-json-bundle": "dev-master"
     },
     "require-dev": {
         "symfony/framework-bundle": "~2.7"

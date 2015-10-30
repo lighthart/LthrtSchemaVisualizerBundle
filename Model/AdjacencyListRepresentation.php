@@ -17,10 +17,10 @@ class AdjacencyListRepresentation
 
     public function __construct($entityRepresentations, $router, $level = 0)
     {
-        $entityList = array_map(function($er) {return $er->getClass(); }, $entityRepresentations);
+        $entityList = array_map(function ($er) {return $er->getClass(); }, $entityRepresentations);
         foreach ($entityRepresentations as $entityRepresentation) {
             foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
-                $getMethod = 'get'.ucfirst($type);
+                $getMethod = 'get' . ucfirst($type);
                 foreach ($entityRepresentation->$getMethod() as $key => $relation) {
                     if (in_array($relation, $entityList)) {
                         $this->adjacencyList[$entityRepresentation->getClass()][] = $relation;
@@ -39,6 +39,7 @@ class AdjacencyListRepresentation
         $normalizer->setIgnoredAttributes(['id']);
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
         $json       = $serializer->serialize($this->adjacencyList, 'json');
+
         return $json;
     }
 }

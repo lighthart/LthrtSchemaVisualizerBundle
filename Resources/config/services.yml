@@ -8,4 +8,3 @@ services:
         public: false
         tags:
             - { name: twig.extension }
-

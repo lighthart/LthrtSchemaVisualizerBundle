@@ -19,14 +19,14 @@ class GraphRepresentation
     {
         foreach ($entityRepresentations as $entityRepresentation) {
             foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
-                $getMethod = 'get'.ucfirst($type);
+                $getMethod = 'get' . ucfirst($type);
                 foreach ($entityRepresentation->$getMethod() as $key => $relation) {
-                    $link['source'] = $entityRepresentation->getName();
-                    $link['target'] = strrev(strstr(strrev($relation), '_', true));
-                    $link['type'] = $type;
+                    $link['source']      = $entityRepresentation->getName();
+                    $link['target']      = strrev(strstr(strrev($relation), '_', true));
+                    $link['type']        = $type;
                     $link['sourceClass'] = $router->generate('single_graph_schema', ['class' => $entityRepresentation->getClass()]);
                     $link['targetClass'] = $router->generate('single_graph_schema', ['class' => $relation]);
-                    $this->links[] = $link;
+                    $this->links[]       = $link;
                 }
             }
         }
@@ -38,6 +38,7 @@ class GraphRepresentation
         $normalizer->setIgnoredAttributes(['id']);
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
         $json       = $serializer->serialize($this->links, 'json');
+
         return $json;
     }
 }

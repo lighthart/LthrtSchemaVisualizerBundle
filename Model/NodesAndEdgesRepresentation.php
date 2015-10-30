@@ -17,8 +17,8 @@ class NodesAndEdgesRepresentation
 
     public function __construct($entityRepresentation)
     {
-        $nodes = new NodesRepresentation($entityRepresentation);
-        $edges = new EdgesRepresentation($entityRepresentation);
+        $nodes                        = new NodesRepresentation($entityRepresentation);
+        $edges                        = new EdgesRepresentation($entityRepresentation);
         $this->nodesAndEdges['nodes'] = $nodes->getJSON();
         $this->nodesAndEdges['edges'] = $edges->getJSON();
     }
@@ -29,9 +29,10 @@ class NodesAndEdgesRepresentation
         $normalizer->setIgnoredAttributes(['id']);
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
         $json       = $serializer->serialize($this->nodesAndEdges, 'json');
-        $json = str_replace('\\', '', $json);
-        $json = str_replace('"[', '[', $json);
-        $json = str_replace(']"', ']', $json);
+        $json       = str_replace('\\', '', $json);
+        $json       = str_replace('"[', '[', $json);
+        $json       = str_replace(']"', ']', $json);
+
         return $json;
     }
 }

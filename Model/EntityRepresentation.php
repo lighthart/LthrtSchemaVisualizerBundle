@@ -50,7 +50,7 @@ class EntityRepresentation
     {
         $this->name   = strrev(strstr(strrev($metadata->name), '\\', true));
         $this->class  = str_replace('\\', '_', $metadata->name);
-        $this->parent = array_map(function($c) { return strrev(strstr(strrev($c), '\\', true)); }, $metadata->parentClasses);
+        $this->parent = array_map(function ($c) { return strrev(strstr(strrev($c), '\\', true)); }, $metadata->parentClasses);
         $this->fields = array_keys(array_map(function ($f) {return $f['fieldName'];}, $metadata->fieldMappings));
 
         $constants['oneToOne']   = ClassMetadata::ONE_TO_ONE;
@@ -73,33 +73,34 @@ class EntityRepresentation
     }
 
     /**
-     * Get class
+     * Get class.
      *
      * @return
      */
-
-    public function getClass() {
-         return $this->class;
+    public function getClass()
+    {
+        return $this->class;
     }
 
     /**
-     * Set class
+     * Set class.
      *
      * @param
+     *
      * @return $this
      */
-    public function setClass($class) {
+    public function setClass($class)
+    {
         $this->class = $class;
+
         return $this;
     }
-
 
     /**
      * Get name.
      *
      * @return
      */
-
     public function getName()
     {
         return $this->name;

@@ -16,13 +16,15 @@ class EdgesRepresentation
     {
         foreach ($entityRepresentations as $entityRepresentation) {
             foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $relation) {
-                $getMethod = 'get'.ucfirst($relation);
+                $getMethod = 'get' . ucfirst($relation);
                 foreach ($entityRepresentation->$getMethod() as $key => $type) {
-                    $link=[];
-                    $link[stristr($relation, 'To', true)][] = $entityRepresentation->getClass();
-                    $link[strtolower(substr(stristr($relation, 'To', false),2))][] = $type;
+                    $link                                                           = [];
+                    $link[stristr($relation, 'To', true)][]                         = $entityRepresentation->getClass();
+                    $link[strtolower(substr(stristr($relation, 'To', false), 2))][] = $type;
                     foreach (['one', 'many'] as $kind) {
-                        if (isset($link[$kind])) { sort($link[$kind]);}
+                        if (isset($link[$kind])) {
+                            sort($link[$kind]);
+                        }
                     }
                     $links[] = $link;
                 }
@@ -30,7 +32,7 @@ class EdgesRepresentation
         }
         $this->links = [];
 
-        foreach($links as $link) {
+        foreach ($links as $link) {
             if (!in_array($link, $this->links)) {
                 $this->links[] = $link;
             }

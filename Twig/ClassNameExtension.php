@@ -18,7 +18,6 @@ class ClassNameExtension extends \Twig_Extension
 
     public function classNameFilter($string)
     {
-
         return strrev(strstr(strrev($string), '_', true));
     }
 }

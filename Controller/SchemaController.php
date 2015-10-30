@@ -14,8 +14,9 @@ class SchemaController extends Controller
 {
     public function jsonAction(Request $request, $depth = 0, $class = null)
     {
-        $json = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
+        $json          = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
         $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
+
         return $this->render('LthrtSchemaVisualizerBundle:Schema:json.html.twig', [
             'json'          => $json,
             'class'         => $class,
@@ -26,7 +27,7 @@ class SchemaController extends Controller
 
     public function graphAction(Request $request, $depth = 0, $class = null)
     {
-        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class , $depth);
+        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:graph.html.twig', [
             'adjacencyList' => $adjacencyList,
@@ -38,13 +39,13 @@ class SchemaController extends Controller
     public function graphmlAction(Request $request, $depth = 0, $class = null)
     {
         $json = $this->get('lthrt_schema_visualizer.representation_service')->getNodesAndEdges($class);
+
         return $this->render('LthrtSchemaVisualizerBundle:Schema:graphml.html.twig', [
             'json'          => $json,
             'class'         => $class,
             'depth'         => $depth,
         ]);
     }
-
 
     public function listAction(Request $request)
     {

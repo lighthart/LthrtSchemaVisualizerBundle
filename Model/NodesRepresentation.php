@@ -15,14 +15,14 @@ class NodesRepresentation
     public function __construct($entityRepresentations)
     {
         foreach ($entityRepresentations as $entityRepresentation) {
-            $node['name'] = $entityRepresentation->getName();
-            $node['class'] = $entityRepresentation->getClass();
+            $node['name']   = $entityRepresentation->getName();
+            $node['class']  = $entityRepresentation->getClass();
             $node['fields'] = $entityRepresentation->getFields();
-            $nodes[] = $node;
+            $nodes[]        = $node;
         }
-        $this->nodes=[];
+        $this->nodes = [];
 
-        foreach($nodes as $node) {
+        foreach ($nodes as $node) {
             if (!in_array($node, $this->nodes)) {
                 $this->nodes[] = $node;
             }

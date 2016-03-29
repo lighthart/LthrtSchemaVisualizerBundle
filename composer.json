@@ -10,10 +10,10 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/lthrt/EntityBundle.git"
+            "url": "https://github.com/lthrt/LthrtEntityBundle.git"
         }
     ],
-    "homepage": "https://github.com/lthrt/SchemaVisualizerBundle",
+    "homepage": "https://github.com/lthrt/LthrtSchemaVisualizerBundle",
     "license": "MIT",
     "type": "symfony-bundle",
     "authors": [

@@ -50,7 +50,7 @@ class EntityRepresentation
     {
         $this->name   = strrev(strstr(strrev($metadata->name), '\\', true));
         $this->class  = str_replace('\\', '_', $metadata->name);
-        $this->parent = array_map(function ($c) { return strrev(strstr(strrev($c), '\\', true)); }, $metadata->parentClasses);
+        $this->parent = array_map(function ($c) {return strrev(strstr(strrev($c), '\\', true));}, $metadata->parentClasses);
         $this->fields = array_keys(array_map(function ($f) {return $f['fieldName'];}, $metadata->fieldMappings));
 
         $constants['oneToOne']   = ClassMetadata::ONE_TO_ONE;
@@ -59,14 +59,16 @@ class EntityRepresentation
         $constants['manyToMany'] = ClassMetadata::MANY_TO_MANY;
 
         foreach (['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'] as $type) {
-            $this->$type =  array_map(
-                function ($f) { return str_replace('\\', '_', $f['targetEntity']);},
-                array_filter($metadata->associationMappings,
-                    function ($a) use ($class, $constants, $type, $metadata) {
-                        return $class
-                        ? $constants[$type] == $a['type'] && ($metadata->name == $a['targetEntity'] || $metadata->name == $a['sourceEntity'])
-                        : $constants[$type] == $a['type'];
-                    }
+            $this->$type = array_unique(
+                array_map(
+                    function ($f) {return str_replace('\\', '_', $f['targetEntity']);},
+                    array_filter($metadata->associationMappings,
+                        function ($a) use ($class, $constants, $type, $metadata) {
+                            return $class
+                            ? $constants[$type] == $a['type'] && ($metadata->name == $a['targetEntity'] || $metadata->name == $a['sourceEntity'])
+                            : $constants[$type] == $a['type'];
+                        }
+                    )
                 )
             );
         }

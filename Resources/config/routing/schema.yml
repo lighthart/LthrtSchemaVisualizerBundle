@@ -1,6 +1,6 @@
-json_schema:
-    path:     /json/{depth}/{class}
-    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:json", class : 0, depth: 0 }
+dagre_schema:
+    path:     /dagre/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:dagre", class : 0, depth: 0 }
 
 graph_schema:
     path:     /graph/{depth}/{class}
@@ -9,6 +9,10 @@ graph_schema:
 graphml_schema:
     path:     /graphml/{depth}/{class}
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:graphml", class : 0, depth: 0 }
+
+json_schema:
+    path:     /json/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:json", class : 0, depth: 0 }
 
 list_schema:
     path:     /

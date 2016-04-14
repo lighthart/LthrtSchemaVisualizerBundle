@@ -46,7 +46,6 @@ class RepresentationService
         $classes = array_unique($classes);
 
         foreach ($classes as $key => $newClass) {
-            var_dump($newClass);
             $metadata                = $this->em->getClassMetadata($newClass);
             $entityRepresentations[] = new EntityRepresentation($metadata, $class);
         }

@@ -15,13 +15,11 @@ class SchemaController extends Controller
     public function dagreAction(Request $request, $depth = 0, $class = null)
     {
         $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
-        $json          = $this->get('lthrt_schema_visualizer.representation_service')->getNodesAndEdges($class);
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:dagre.html.twig', [
             'adjacencyList' => $adjacencyList,
             'class'         => $class,
             'depth'         => $depth,
-            'json'          => $json,
         ]);
     }
 

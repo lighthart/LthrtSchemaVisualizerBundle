@@ -12,15 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SchemaController extends Controller
 {
-    public function jsonAction(Request $request, $depth = 0, $class = null)
+    public function dagreAction(Request $request, $depth = 0, $class = null)
     {
-        $json          = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
         $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
 
-        return $this->render('LthrtSchemaVisualizerBundle:Schema:json.html.twig', [
-            'json'          => $json,
-            'class'         => $class,
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:dagre.html.twig', [
             'adjacencyList' => $adjacencyList,
+            'class'         => $class,
             'depth'         => $depth,
         ]);
     }
@@ -41,8 +39,21 @@ class SchemaController extends Controller
         $json = $this->get('lthrt_schema_visualizer.representation_service')->getNodesAndEdges($class);
 
         return $this->render('LthrtSchemaVisualizerBundle:Schema:graphml.html.twig', [
+            'json'  => $json,
+            'class' => $class,
+            'depth' => $depth,
+        ]);
+    }
+
+    public function jsonAction(Request $request, $depth = 0, $class = null)
+    {
+        $json          = $this->get('lthrt_schema_visualizer.representation_service')->getJSON($class);
+        $adjacencyList = $this->get('lthrt_schema_visualizer.representation_service')->getAdjacencyListJSON($class, $depth);
+
+        return $this->render('LthrtSchemaVisualizerBundle:Schema:json.html.twig', [
             'json'          => $json,
             'class'         => $class,
+            'adjacencyList' => $adjacencyList,
             'depth'         => $depth,
         ]);
     }

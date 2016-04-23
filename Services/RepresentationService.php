@@ -34,7 +34,6 @@ class RepresentationService
                     foreach ($associations as $association) {
                         $classes[] = $association;
                     }
-                    $classes = array_unique($classes);
                 }
                 $counter++;
             }
@@ -43,6 +42,8 @@ class RepresentationService
                 $this->em->getMetadataFactory()->getAllMetadata()
             );
         }
+
+        $classes = array_unique($classes);
 
         foreach ($classes as $key => $newClass) {
             $metadata                = $this->em->getClassMetadata($newClass);
@@ -58,14 +59,14 @@ class RepresentationService
         if ($class) {
             $class   = str_replace('_', '\\', $class);
             $classes =
-            array_map(
-                function ($d) { return $d->name; },
+                array_map(
+                function ($d) {return $d->name;},
                 array_filter(
                     $this->em->getMetadataFactory()->getAllMetadata(),
                     function ($m) use ($class) {
                         return in_array($class,
                             array_map(
-                                function ($md) { return $md['targetEntity'];},
+                                function ($md) {return $md['targetEntity'];},
                                 $m->associationMappings
                             )
                         );

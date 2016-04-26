@@ -1,5 +1,5 @@
 graph_schema:
-    path:     /dagre/{depth}/{class}
+    path:     /graph/{depth}/{class}
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:dagre", class : 0, depth: 0 }
 
 graphml_schema:
@@ -15,5 +15,5 @@ list_schema:
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:list" }
 
 old_graph_schema:
-    path:     /graph/{depth}/{class}
+    path:     /oldgraph/{depth}/{class}
     defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:graph", class : 0, depth: 0 }

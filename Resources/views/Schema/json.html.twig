@@ -1,9 +1,4 @@
 {% include 'LthrtSchemaVisualizerBundle:Schema:graphcss.html.twig' %}
-{% for table in json|json_decode %}
-{{ table.class }}
-{% endfor %}
-<br/>
-<br/>
 {% include 'LthrtSchemaVisualizerBundle:Schema:dagre.html.twig' with {'depth' : depth, 'adjacencyList' : adjacencyList } %}
 <table>
   <tr>

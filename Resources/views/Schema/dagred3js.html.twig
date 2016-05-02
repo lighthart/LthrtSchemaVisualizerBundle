@@ -1,4 +1,4 @@
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 <script src="/eval/bundles/lthrtschemavisualizer/js/dagre-d3.min.js"></script>
 <script type="text/javascript">
 var adjacencyList={{adjacencyList|raw}};
@@ -59,11 +59,15 @@ render(inner, g);
 
 // Center the graph
 var initialScale = 0.75;
+console.log(svg);
+
 zoom
 .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
 .scale(initialScale)
 .event(svg);
 svg.attr('height', g.graph().height * initialScale + 40);
+
+console.log('Not Here');
 
 var selections = inner.selectAll("g.node"); 
 console.log(selections);

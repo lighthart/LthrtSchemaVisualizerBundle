@@ -1,11 +1,9 @@
-<script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="/eval/bundles/lthrtschemavisualizer/js/dagre-d3.min.js"></script>
 <script type="text/javascript">
 var adjacencyList={{adjacencyList|raw}};
 var depth = {{depth}};
 var urlRoot = "{{ app.request.getSchemeAndHttpHost() }}"+"{{ app.request.getBaseUrl() }}"+"/schema/graph/"+depth+"/";
-
-console.log(adjacencyList);
 
 function className(className) {
     className = className.split('_');
@@ -22,8 +20,6 @@ Object.keys(adjacencyList).forEach(function(c) {
     });
 });
 
-
-console.log(g);
 Object.keys(adjacencyList).forEach(function(c) {
     if (adjacencyList[c].length) {
         adjacencyList[c].forEach(function(t) {
@@ -37,7 +33,6 @@ Object.keys(adjacencyList).forEach(function(c) {
 // Set some general styles
 g.nodes().forEach(function(v) {
     var node = g.node(v);
-    console.log(node);
     node.rx = node.ry = 5;
 });
 
@@ -59,7 +54,6 @@ render(inner, g);
 
 // Center the graph
 var initialScale = 0.75;
-console.log(svg);
 
 zoom
 .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
@@ -67,10 +61,8 @@ zoom
 .event(svg);
 svg.attr('height', g.graph().height * initialScale + 40);
 
-console.log('Not Here');
 
 var selections = inner.selectAll("g.node"); 
-console.log(selections);
 selections.on('click', function (d, i) {
     window.open(urlRoot+d);
 });
